@@ -1,0 +1,33 @@
+{
+    'author': 'o19',
+    'mod_name': 'CopyTuning',
+    'mod_folder': 'copy_tuning',
+
+    'PieMenuCategory': {
+        'Tuning_DC_': {'icon': 'MagicWand.dds', },
+    },
+
+    'PieMenuActions': {
+        'interactions': {
+            'CopyTuningInteractions': [
+                {
+                    'display_name': 'PieMenuActions_DEFAULTS',
+                    'parent': 'Tuning_DC_',
+                    'tunables': { 'action': {'default': 0, 'type': 'int'}}
+                }, {
+                    'display_name': 'Copy',
+                    'icon': 'copy.dds',
+                    'tunables': { 'action': {'value': 1}}
+                }, {
+                    'display_name': 'Paste',
+                    'icon': 'paste.dds',
+                    'tunables': {'action': {'value': 2}}
+                }, {
+                    'display_name': 'Restore',
+                    'icon': 'restore.dds',
+                    'tunables': {'action': {'value': 4}}
+                }
+            ]
+        }
+    }
+}
