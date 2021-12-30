@@ -29,18 +29,24 @@ class CopyTuningInteractions(CommonTerrainInteraction):
 
     @classmethod
     def on_test(cls, interaction_sim: Sim, interaction_target: Any, interaction_context: InteractionContext, **kwargs) -> TestResult:
-        return TestResult.TRUE
+        rv = TestResult.NONE
+        if cls.action == 1:
+            rv = TestResult.TRUE
+        elif cls.action == 2:
+            if CopyTuningStore.cp_super_affordances:
+                rv = TestResult.TRUE
+        elif cls.action == 4:
+            if getattr(interaction_target, 'cp_super_affordances', None):
+                rv = TestResult.TRUE
+        return rv
 
     def on_started(self, interaction_sim: Sim, interaction_target: Any) -> bool:
-        return self.handle_interaction(interaction_sim, interaction_target)
-
-    def handle_interaction(self, interaction_sim: Sim, interaction_target: Any) -> bool:
         if self.action == 1:
             log.debug("Copy")
             CopyTuningStore.cp_super_affordances = getattr(interaction_target, '_super_affordances')
             CopyTuningStore.cp_supported_posture_families = getattr(interaction_target, '_supported_posture_families')
         elif self.action == 2:
-            if not getattr(interaction_target, 'cp_super_affordances'):
+            if not getattr(interaction_target, 'cp_super_affordances', None):
                 log.debug("Backup")
                 setattr(interaction_target, 'cp_super_affordances', getattr(interaction_target, '_super_affordances'))
                 setattr(interaction_target, 'cp_supported_posture_families', getattr(interaction_target, '_supported_posture_families'))
@@ -51,7 +57,7 @@ class CopyTuningInteractions(CommonTerrainInteraction):
             else:
                 log.warn("Nothing to paste")  # My bad, this interaction should have been hidden
         elif self.action == 4:
-            if getattr(interaction_target, 'cp_super_affordances'):
+            if getattr(interaction_target, 'cp_super_affordances', None):
                 log.debug("Restore")
                 setattr(interaction_target, '_super_affordances', getattr(interaction_target, 'cp_super_affordances'))
                 setattr(interaction_target, '_supported_posture_families', getattr(interaction_target, 'cp_supported_posture_families'))
