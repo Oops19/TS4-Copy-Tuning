@@ -11,21 +11,20 @@ from event_testing.results import TestResult
 from interactions.context import InteractionContext
 from sims.sim import Sim
 from sims4.tuning.tunable import Tunable
+from sims4communitylib.classes.interactions.common_immediate_super_interaction import CommonImmediateSuperInteraction
 
-from sims4communitylib.classes.interactions.common_terrain_interaction import CommonTerrainInteraction
 from sims4communitylib.utils.common_log_registry import CommonLog, CommonLogRegistry
 
 log: CommonLog = CommonLogRegistry.get().register_log(ModInfo.get_identity().name, 'main')
 log.enable()
 
 
-class CopyTuningInteractions(CommonTerrainInteraction):
+class CopyTuningInteractions(CommonImmediateSuperInteraction):
     INSTANCE_TUNABLES = {
         'action': Tunable(tunable_type=int, default=0),
     }
 
     __slots__ = {'action', }
-
 
     @classmethod
     def on_test(cls, interaction_sim: Sim, interaction_target: Any, interaction_context: InteractionContext, **kwargs) -> TestResult:
@@ -45,6 +44,7 @@ class CopyTuningInteractions(CommonTerrainInteraction):
             log.debug("Copy")
             CopyTuningStore.cp_super_affordances = getattr(interaction_target, '_super_affordances')
             CopyTuningStore.cp_supported_posture_families = getattr(interaction_target, '_supported_posture_families')
+            CopyTuningStore2.copy(interaction_target)
         elif self.action == 2:
             if not getattr(interaction_target, 'cp_super_affordances', None):
                 log.debug("Backup")
@@ -54,6 +54,7 @@ class CopyTuningInteractions(CommonTerrainInteraction):
                 log.debug("Paste")
                 setattr(interaction_target, '_super_affordances', CopyTuningStore.cp_super_affordances)
                 setattr(interaction_target, '_supported_posture_families', CopyTuningStore.cp_supported_posture_families)
+                CopyTuningStore2.paste(interaction_target)
             else:
                 log.warn("Nothing to paste")  # My bad, this interaction should have been hidden
         elif self.action == 4:
@@ -68,3 +69,22 @@ class CopyTuningInteractions(CommonTerrainInteraction):
 class CopyTuningStore:
     cp_super_affordances = None
     cp_supported_posture_families = None
+
+
+class CopyTuningStore2:
+    keys = ['_super_affordances', '_supported_posture_families', 'VISIBLE_TO_AUTOMATION']  # , 'interactable'] read-only
+    _super_affordances = None
+    _supported_posture_families = None
+    VISIBLE_TO_AUTOMATION = None
+    interactable = None
+
+    @staticmethod
+    def copy(obj):
+        for key in CopyTuningStore2.keys:
+            setattr(CopyTuningStore2, key, getattr(obj, key))
+
+    @staticmethod
+    def paste(obj):
+        for key in CopyTuningStore2.keys:
+            log.debug(f"{key}")
+            setattr(obj, key, getattr(CopyTuningStore2, key))

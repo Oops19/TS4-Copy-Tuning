@@ -1,5 +1,5 @@
 # TS4 Copy-Tuning Mod
-A simple mod to copy tunings from one object to another.
+A simple mod to copy tunings (_super_affordances and _supported_posture_families) from one object to another.
 
 It has no error checks so in case of an exception you will see an orange pop-up.
 
@@ -13,9 +13,12 @@ It offers '🗎 Copy', '📋 Paste' and '⎌ Restore'.
 - Restore will copy the tuning form the backup. This works as long as the lot is loaded.
 
 ### Saving and Loading the game
-The modified tuning - but not the backup - will be saved and loaded. After loading there is no 'Restore' option.
-
-One may still copy a tuning from another working object to restore functionality.
+The modified tuning will not be saved. After loading all objects work as expected.
+Saving and loading the changes will be implemented later.
 
 ### Issues
 Objects (eg. chairs) may still be usable even though the 'Sit' interaction is missing.
+
+### TODO
+Persist the changes and load them with the game.
+Allow to specify the list of tunings to be copied.

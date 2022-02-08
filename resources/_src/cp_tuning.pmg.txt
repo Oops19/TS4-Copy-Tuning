@@ -1,29 +1,38 @@
 {
     'author': 'o19',
-    'mod_name': 'CopyTuning',
-    'mod_folder': 'copy_tuning',
+    'mod_name': 'CopyTuning',  # 'Translucent World',
+    'mod_folder': 'copy_tuning',  # All files in this folder will be deleted! Do not point to your mod folder.
 
     'PieMenuCategory': {
-        'Tuning_DC_': {'icon': 'MagicWand.dds', },
+        # DDS Format: Compression: None, Mimpaps: None
+        # Provide the icon as DDS. Specify the '.png' name here, '.dst' must exist. ????
+        # PNG for the 'Pie Menu Category Tuning' (0x2F7D0004)
+        # DDS for the 'Sim Data' (0x00B2D882)
+        # '(.../)parent/category', root without parent. '-parent' to specify a decimal number. '...' will be used as a prefix if specified
+        # One entry per line, 1st line should not contain a slash.
+        'Tuning': {'icon': 'MagicWand.dds', 'debug': True, },
     },
 
     'PieMenuActions': {
-        'interactions': {
-            'CopyTuningInteractions': [
+        'interactions': {  # == {file_name} with path: "{mod_folder}/{this.replace('.', '/')}.py"
+            'CopyTuningInteractions': [  # == classes: {c}, _Register{this}Handler
                 {
                     'display_name': 'PieMenuActions_DEFAULTS',
-                    'parent': 'Tuning_DC_',
-                    'tunables': { 'action': {'default': 0, 'type': 'int'}}
+                    'parent': 'Tuning',
+                    # 'reg': ['ON_SCRIPT_OBJECT_LOAD', 'ON_TERRAIN_LOAD'],
+                    'tunables': {
+                        'action': {'default': 0, 'type': 'int'},
+                    }
                 }, {
-                    'display_name': 'Copy',
+                    'display_name': 'Copy', 'debug': True,
                     'icon': 'copy.dds',
                     'tunables': { 'action': {'value': 1}}
                 }, {
-                    'display_name': 'Paste',
+                    'display_name': 'Paste', 'debug': True,
                     'icon': 'paste.dds',
                     'tunables': {'action': {'value': 2}}
                 }, {
-                    'display_name': 'Restore',
+                    'display_name': 'Restore', 'debug': True,
                     'icon': 'restore.dds',
                     'tunables': {'action': {'value': 4}}
                 }
